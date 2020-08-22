@@ -61,7 +61,3 @@ function random(num) {
 }
 
 init();
-
-const ale = () => {
-    console.log('Hello');
-}
