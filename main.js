@@ -1,146 +1,77 @@
-const firstBtn = document.querySelector('#first-btn'),
-    control = document.querySelector('.control'),
-    logsDiv = document.querySelector('#logs');
+import Pokemon from './pokemon.js';
+import random from './utils.js';
 
-const character = {
+const logsDiv = document.querySelector('#logs'),
+    btn1 = document.querySelector('#btn1'),
+    btn2 = document.querySelector('#btn2');
+
+const player1 = new Pokemon({
     name: 'Pikachu',
     category: 'mouse',
     type: 'electric',
     weakness: ['ground'],
-    hp: {
-        current: 100,
-        total: 100,
-    },
-    damage: 20,
-    elHp: document.querySelector('#health-character'),
-    elPrograssbar: document.querySelector('#progressbar-character'),
-    render: renderHp,
-    hit: doHit,
-};
+    hp: 500,
+    damage: 80,
+    selectors: 'character',
+});
 
-const enemy = {
+const player2 = new Pokemon({
     name: 'Charmander',
     category: 'lizard',
     type: 'fire',
     weakness: ['water', 'ground', 'rock'],
-    hp: {
-        current: 100,
-        total: 100,
-    },
-    damage: 20,
-    elHp: document.querySelector('#health-enemy'),
-    elPrograssbar: document.querySelector('#progressbar-enemy'),
-    render: renderHp,
-    hit: doHit,
-};
-
-function renderHp() {
-    const { elHp: str, elPrograssbar: bar, hp: { current, total } } = this;
-    let percent = current / (total / 100);
-
-    str.textContent = current + ' / ' + total;
-    bar.style.width = percent + '%';
-    changeColor(percent, bar);
-};
-
-function changeColor(percent, bar) {
-    let red, green;
-
-    if (percent > 50) {
-        green = 255;
-        red = 255 / 50 * (100 - percent);
-    } else {
-        red = 255;
-        green = 255 / 50 * percent;
-    }
-
-    bar.style.background = `rgb(${red},${green},0)`;
-}
-
-function random(num) {
-    return Math.ceil(Math.random() * num);
-}
-
-function doHit(opponent) {
-    let { name, hp } = opponent;
-
-    const damage = random(this.damage);
-    const message = () => alert('Бедный ' + name + ' проиграл бой!');
-    const list = control.children;
-
-    hp.current -= damage;
-
-    this === enemy ? generateLog(this, character, damage) : generateLog(this, enemy, damage);
-
-    if (hp.current <= 0) {
-        hp.current = 0;
-        for (let i = 0; i < list.length; i++) {
-            list[i].disabled = true;
-        }
-        setTimeout(message, 500);
-    }
-
-    opponent.render();
-}
-
-const counter1 = countClick(1);
-const counter2 = countClick(2);
-
-control.addEventListener('click', event => {
-    const target = event.target;
-
-    if (target.classList.contains('first')) {
-        character.hit(enemy);
-        counter1();
-    }
-
-    if (target.classList.contains('second')) {
-        enemy.hit(character);
-        counter2();
-    }
+    hp: 450,
+    damage: 80,
+    selectors: 'enemy',
 });
 
-function countClick(num) {
-    let count = 0;
+const btnThunderJolt = countBtn(6, btn1);
+btn1.addEventListener('click', function () {
+    btnThunderJolt();
+    player2.changeHp(function (count) {
+        generateLog(player2, player1, count);
+    });
+});
 
+const btnElectroBall = countBtn(10, btn2);
+btn2.addEventListener('click', function () {
+    btnElectroBall();
+    player1.changeHp(function (count) {
+        generateLog(player1, player2, count);
+    });
+});
+
+function countBtn(count = 6, el) {
+    const text = el.textContent;
+    el.textContent = `${text} (${count})`;
     return function () {
-        if (count !== 5) {
-            count++
-        } else {
-            count++;
-            control.children[num - 1].disabled = true;
+        count--;
+        if (count === 0) {
+            el.disabled = true;
         }
-
-        control.children[num - 1].textContent = count;
+        el.textContent = `${text} (${count})`;
+        return count;
     }
-}
-
-function init() {
-    console.log('Start Game!');
-    character.render();
-    enemy.render();
 };
 
 function generateLog(firstPerson, secondPerson, damage) {
-    const { name: firstName } = firstPerson;
-    const { name, hp: { current, total } } = secondPerson;
+    const { name: firstName, hp: { current, total } } = firstPerson;
+    const { secondName } = secondPerson;
 
     const logs = [
-        `${firstName} вспомнил что-то важное, но неожиданно ${name}, не помня себя от испуга, ударил в предплечье врага.`,
-        `${firstName} поперхнулся, и за это ${name} с испугу приложил прямой удар коленом в лоб врага.`,
-        `${firstName} забылся, но в это время наглый ${name}, приняв волевое решение, неслышно подойдя сзади, ударил.`,
-        `${firstName} пришел в себя, но неожиданно ${name} случайно нанес мощнейший удар.`,
-        `${firstName} поперхнулся, но в это время ${name} нехотя раздробил кулаком \<вырезанно цензурой\> противника.`,
-        `${firstName} удивился, а ${name} пошатнувшись влепил подлый удар.`,
-        `${firstName} высморкался, но неожиданно ${name} провел дробящий удар.`,
-        `${firstName} пошатнулся, и внезапно наглый ${name} беспричинно ударил в ногу противника.`,
-        `${firstName} расстроился, как вдруг, неожиданно ${name} случайно влепил стопой в живот соперника.`,
-        `${firstName} пытался что-то сказать, но вдруг, неожиданно ${name} со скуки, разбил бровь сопернику.`
+        `${firstName} вспомнил что-то важное, но неожиданно ${secondName}, не помня себя от испуга, ударил в предплечье врага.`,
+        `${firstName} поперхнулся, и за это ${secondName} с испугу приложил прямой удар коленом в лоб врага.`,
+        `${firstName} забылся, но в это время наглый ${secondName}, приняв волевое решение, неслышно подойдя сзади, ударил.`,
+        `${firstName} пришел в себя, но неожиданно ${secondName} случайно нанес мощнейший удар.`,
+        `${firstName} поперхнулся, но в это время ${secondName} нехотя раздробил кулаком \<вырезанно цензурой\> противника.`,
+        `${firstName} удивился, а ${secondName} пошатнувшись влепил подлый удар.`,
+        `${firstName} высморкался, но неожиданно ${secondName} провел дробящий удар.`,
+        `${firstName} пошатнулся, и внезапно наглый ${secondName} беспричинно ударил в ногу противника.`,
+        `${firstName} расстроился, как вдруг, неожиданно ${secondName} случайно влепил стопой в живот соперника.`,
+        `${firstName} пытался что-то сказать, но вдруг, неожиданно ${secondName} со скуки, разбил бровь сопернику.`
     ];
 
     const p = document.createElement('p');
-    p.textContent = logs[random(logs.length) - 1] + `<b> -${damage}, [${current}/${total}]</b>`;
+    p.textContent = logs[random(logs.length) - 1] + ` -${damage}, [${current}/${total}]`;
     logsDiv.insertBefore(p, logsDiv.children[0]);
 }
-
-init();
