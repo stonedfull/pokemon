@@ -96,9 +96,8 @@ class Game extends Selectors {
             const btnCount = countBtn(item.maxCount, btn);
             btn.addEventListener('click', () => {
                 btnCount();
-                this.player1.doHit(this.player2, item);
                 const cb = () => { this.player2.doHit(this.player1, this.player2.attacks[0]) };
-                setTimeout(cb, 1000);
+                !this.player1.doHit(this.player2, item) && setTimeout(cb, 1000);
             });
             this.control.appendChild(btn);
         });

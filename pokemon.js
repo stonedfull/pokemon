@@ -41,8 +41,14 @@ class Pokemon extends Selectors {
                 let newLvl = Number(this.lvl.textContent.slice(-1));
                 newLvl++;
                 this.lvl.textContent = 'Lv. ' + newLvl;
+                renderHp();
+                generateLog(this, opponent, count);
+                return true;
             } else {
                 game.over();
+                renderHp();
+                generateLog(this, opponent, count);
+                return false;
             }
         }
 
