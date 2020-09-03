@@ -97,7 +97,7 @@ class Game extends Selectors {
             btn.addEventListener('click', () => {
                 btnCount();
                 const cb = () => { this.player2.doHit(this.player1, this.player2.attacks[0]) };
-                !this.player1.doHit(this.player2, item) && setTimeout(cb, 1000);
+                !this.player1.doHit(this.player2, item) && cb();
             });
             this.control.appendChild(btn);
         });
@@ -105,10 +105,13 @@ class Game extends Selectors {
 
     changeOpponent = () => {
         let p2 = pokemons[random(pokemons.length - 1)];
+        const allButtons = document.querySelectorAll('.control .button');
+        allButtons.forEach(item => item.disabled = true);
         this.player2 = new Pokemon({
             ...p2,
             selectors: 'player2',
         });
+        allButtons.forEach(item => item.disabled = false);
     };
 
     over = () => {

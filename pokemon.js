@@ -1,4 +1,4 @@
-import { random, countBtn, generateLog } from './utils.js';
+import { random, generateLog } from './utils.js';
 import game from './main.js';
 
 class Selectors {
@@ -37,7 +37,7 @@ class Pokemon extends Selectors {
         if (hp.current <= 0) {
             hp.current = 0;
             if (opponent.selectors === 'player2') {
-                setTimeout(game.changeOpponent, 1000);
+                game.changeOpponent();
                 let newLvl = Number(this.lvl.textContent.slice(-1));
                 newLvl++;
                 this.lvl.textContent = 'Lv. ' + newLvl;
