@@ -5,6 +5,7 @@ import { random, countBtn } from './utils.js';
 class Selectors {
     constructor() {
         this.playground = document.querySelector('.playground');
+        this.logDiv = document.querySelector('#logs');
     };
 }
 
@@ -16,6 +17,7 @@ class Game extends Selectors {
 
     begin = () => {
         this.playground.textContent = '';
+        this.logDiv.textContent = '';
         pokemons.forEach(item => {
             const { name, img } = item;
             const card = document.createElement('div');
@@ -95,9 +97,29 @@ class Game extends Selectors {
             btn.addEventListener('click', () => {
                 btnCount();
                 this.player1.doHit(this.player2, item);
+                const cb = () => { this.player2.doHit(this.player1, this.player2.attacks[0]) };
+                setTimeout(cb, 1000);
             });
             this.control.appendChild(btn);
         });
+    };
+
+    changeOpponent = () => {
+        let p2 = pokemons[random(pokemons.length - 1)];
+        this.player2 = new Pokemon({
+            ...p2,
+            selectors: 'player2',
+        });
+    };
+
+    over = () => {
+        const allButtons = document.querySelectorAll('.control .button');
+        allButtons.forEach(item => item.remove());
+        const newBtn = document.createElement('div');
+        newBtn.className = 'button';
+        newBtn.innerHTML = `Игра оконченна<br>Начать заново`;
+        this.control.appendChild(newBtn);
+        newBtn.addEventListener('click', this.begin);
     };
 };
 

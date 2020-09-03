@@ -32,3 +32,5 @@ player1.attacks.forEach(item => {
 
 const game = new Game;
 game.begin();
+
+export default game;

@@ -1,5 +1,5 @@
 import { random, countBtn, generateLog } from './utils.js';
-
+import game from './main.js';
 
 class Selectors {
     constructor(name) {
@@ -7,6 +7,7 @@ class Selectors {
         this.elPrograssbar = document.querySelector(`#progressbar-${name}`);
         this.elImg = document.querySelector(`.img-${name}`);
         this.elName = document.querySelector(`#name-${name}`);
+        this.lvl = document.querySelector(`.${name} .lvl`);
     };
 }
 
@@ -22,6 +23,7 @@ class Pokemon extends Selectors {
         this.attacks = attacks;
         this.elImg.src = img;
         this.elName.textContent = name;
+        this.selectors = selectors;
 
         this.renderHp();
     };
@@ -34,6 +36,14 @@ class Pokemon extends Selectors {
 
         if (hp.current <= 0) {
             hp.current = 0;
+            if (opponent.selectors === 'player2') {
+                setTimeout(game.changeOpponent, 1000);
+                let newLvl = Number(this.lvl.textContent.slice(-1));
+                newLvl++;
+                this.lvl.textContent = 'Lv. ' + newLvl;
+            } else {
+                game.over();
+            }
         }
 
         renderHp();
