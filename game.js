@@ -105,13 +105,11 @@ class Game extends Selectors {
 
     changeOpponent = () => {
         let p2 = pokemons[random(pokemons.length - 1)];
-        const allButtons = document.querySelectorAll('.control .button');
-        allButtons.forEach(item => item.disabled = true);
         this.player2 = new Pokemon({
             ...p2,
             selectors: 'player2',
         });
-        allButtons.forEach(item => item.disabled = false);
+        this.player2.renderHp();
     };
 
     over = () => {

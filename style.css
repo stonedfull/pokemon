@@ -37,13 +37,13 @@ body {
 }
 
 .control {
-    width: 320px;
-    height: 260px;
+    height: 240px;
     position: relative;
-    margin: 20px;
+    margin: auto 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    flex-direction: column;
 }
 
 .playground {
@@ -275,7 +275,6 @@ body {
     outline: none !important;
     cursor: pointer;
     font-size: 18px;
-    margin: 0 10px;
 }
 .button:after {
     content: "";
@@ -525,4 +524,12 @@ h1 {
     text-align: left;
     font-size: 14px;
     color: #555;
+    padding: 0 10px;
+}
+
+@media only screen and (max-width: 650px) {
+    .button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
 }
