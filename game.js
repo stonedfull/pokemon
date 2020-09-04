@@ -47,20 +47,10 @@ class Game extends Selectors {
         this.playground.appendChild(this.card('player2'));
         this.control = document.querySelector('.control');
 
-        this.player1 = new Pokemon({
-            ...p1,
-            selectors: 'player1',
-        });
-        this.player2 = new Pokemon({
-            ...p2,
-            selectors: 'player2',
-        });
+        this.player1 = this.createPlayer(p1, 'player1');
+        this.player2 = this.createPlayer(p2, 'player2');
 
         this.attacks();
-    };
-
-    reset = () => {
-
     };
 
     card = (player) => {
@@ -98,6 +88,7 @@ class Game extends Selectors {
                 btnCount();
                 const cb = () => { this.player2.doHit(this.player1, this.player2.attacks[0]) };
                 !this.player1.doHit(this.player2, item) && cb();
+                this.player2.renderHp();
             });
             this.control.appendChild(btn);
         });
@@ -105,11 +96,14 @@ class Game extends Selectors {
 
     changeOpponent = () => {
         let p2 = pokemons[random(pokemons.length - 1)];
-        this.player2 = new Pokemon({
-            ...p2,
-            selectors: 'player2',
-        });
-        this.player2.renderHp();
+        this.player2 = this.createPlayer(p2, 'player2');
+    };
+
+    createPlayer = (who, select) => {
+        return new Pokemon({
+            ...who,
+            selectors: select,
+        })
     };
 
     over = () => {
