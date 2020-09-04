@@ -1,47 +1,66 @@
-import random from './utils.js';
+import { random, generateLog } from './utils.js';
+import game from './main.js';
 
 class Selectors {
     constructor(name) {
         this.elHp = document.querySelector(`#health-${name}`);
         this.elPrograssbar = document.querySelector(`#progressbar-${name}`);
-    }
+        this.elImg = document.querySelector(`.img-${name}`);
+        this.elName = document.querySelector(`#name-${name}`);
+        this.lvl = document.querySelector(`.${name} .lvl`);
+    };
 }
 
 class Pokemon extends Selectors {
-    constructor({ name, category, type, weakness, hp, damage, selectors, }) {
+    constructor({ name, hp, type, attacks = [], img, selectors }) {
         super(selectors);
         this.name = name;
-        this.category = category;
         this.type = type;
-        this.weakness = weakness;
         this.hp = {
             current: hp,
             total: hp,
         };
-        this.damage = damage;
+        this.attacks = attacks;
+        this.elImg.src = img;
+        this.elName.textContent = name;
+        this.selectors = selectors;
 
         this.renderHp();
-    }
+    };
 
-    changeHp = (cb) => {
-        const { hp, damage, renderHp } = this;
-
-        const count = random(damage, damage - 10);
+    doHit = (opponent, btn) => {
+        const { hp, renderHp } = opponent;
+        const { maxDamage, minDamage } = btn;
+        const count = random(maxDamage, minDamage);
         hp.current -= count;
 
         if (hp.current <= 0) {
             hp.current = 0;
+            if (opponent.selectors === 'player2') {
+                game.changeOpponent();
+                let newLvl = Number(this.lvl.textContent.slice(-1));
+                newLvl++;
+                this.lvl.textContent = 'Lv. ' + newLvl;
+                renderHp();
+                generateLog(this, opponent, count);
+                return true;
+            } else {
+                game.over();
+                renderHp();
+                generateLog(this, opponent, count);
+                return false;
+            }
         }
 
         renderHp();
-        cb && cb(count);
-    }
+        generateLog(this, opponent, count);
+    };
 
     renderHp = () => {
-        const { elHp: str, elPrograssbar: bar, hp: { current, total } } = this;
+        const { elHp, elPrograssbar: bar, hp: { current, total } } = this;
         let percent = current / (total / 100);
 
-        str.textContent = current + ' / ' + total;
+        elHp.textContent = current + ' / ' + total;
         bar.style.width = percent + '%';
         this.changeColor(percent, bar);
     };
@@ -58,7 +77,7 @@ class Pokemon extends Selectors {
         }
 
         bar.style.background = `rgb(${red},${green},0)`;
-    }
+    };
 }
 
 export default Pokemon;

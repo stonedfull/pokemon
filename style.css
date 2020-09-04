@@ -37,13 +37,13 @@ body {
 }
 
 .control {
-    width: 320px;
-    height: 260px;
+    height: 240px;
     position: relative;
-    margin: 20px;
+    margin: auto 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    flex-direction: column;
 }
 
 .playground {
@@ -116,9 +116,6 @@ body {
 }
 .pokemon * {
     vertical-align: middle;
-}
-.pokemon .card {
-    max-width: 100%;
 }
 .pokemon label {
     position: absolute;
@@ -233,7 +230,6 @@ body {
     stroke-width: 4px;
 }
 .pokemon:after {
-    content: "";
     display: block;
     position: absolute;
     left: 7px;
@@ -279,7 +275,6 @@ body {
     outline: none !important;
     cursor: pointer;
     font-size: 18px;
-    margin: 0 20px;
 }
 .button:after {
     content: "";
@@ -474,8 +469,9 @@ body {
 }
 body,
 html {
-    min-height: 100%;
+    height: 100vh;
     text-align: center;
+    overflow: hidden;
 }
 
 h1 {
@@ -528,4 +524,12 @@ h1 {
     text-align: left;
     font-size: 14px;
     color: #555;
+    padding: 0 10px;
+}
+
+@media only screen and (max-width: 650px) {
+    .button {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
 }
