@@ -1,4 +1,4 @@
-import { random, generateLog } from './utils.js';
+import { generateLog } from './utils.js';
 import game from './main.js';
 
 class Selectors {
@@ -12,8 +12,9 @@ class Selectors {
 }
 
 class Pokemon extends Selectors {
-    constructor({ name, hp, type, attacks = [], img, selectors }) {
+    constructor({ id, name, hp, type, attacks = [], img, selectors }) {
         super(selectors);
+        this.id = id;
         this.name = name;
         this.type = type;
         this.hp = {
@@ -28,11 +29,9 @@ class Pokemon extends Selectors {
         this.renderHp();
     };
 
-    doHit = (opponent, btn) => {
+    doHit = (opponent, damage) => {
         const { hp, renderHp } = opponent;
-        const { maxDamage, minDamage } = btn;
-        const count = random(maxDamage, minDamage);
-        hp.current -= count;
+        hp.current -= damage;
 
         if (hp.current <= 0) {
             hp.current = 0;
@@ -42,18 +41,18 @@ class Pokemon extends Selectors {
                 newLvl++;
                 this.lvl.textContent = 'Lv. ' + newLvl;
                 renderHp();
-                generateLog(this, opponent, count);
+                generateLog(this, opponent, damage);
                 return true;
             } else {
                 game.over();
                 renderHp();
-                generateLog(this, opponent, count);
+                generateLog(this, opponent, damage);
                 return false;
             }
         }
 
         renderHp();
-        generateLog(this, opponent, count);
+        generateLog(this, opponent, damage);
     };
 
     renderHp = () => {
