@@ -66,9 +66,11 @@ class Game extends Selectors {
         this.playground.appendChild(this.card('player2'));
         this.control = document.querySelector('.control');
 
+
         this.player1 = this.createPlayer(p1, 'player1');
         this.player2 = this.createPlayer(p2, 'player2');
         console.log(this.player1.attacks[0]);
+        document.querySelectorAll('.pokemon').forEach(item => { item.style.width = '180px'; });
 
         this.attacks();
     };

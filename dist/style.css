@@ -47,10 +47,11 @@ body {
 }
 
 .playground {
-    max-width: 1024px;
+    max-width: 1920px;
     display: flex;
     justify-content: space-around;
     margin: 30px auto;
+    flex-wrap: wrap;
 }
 
 .arrow {
@@ -90,10 +91,10 @@ body {
 .pokemon {
     text-align: center;
     position: relative;
-    width: 180px;
+    width: 160px;
     height: 260px;
     min-width: 150px;
-    margin: 20px;
+    margin: 10px;
     background-image: url(./assets/card.svg);
     background-repeat: no-repeat;
     background-size: contain;
